@@ -2,6 +2,8 @@
 /*
 Plugin Name: CSV Filter Plugin
 Description: Reads a CSV file, compares it to an existing list, filters out duplicates, and removes old links from the original file.
+Version: 1.0
+Author: Luis Fernando
 */
 
 function csv_filter_plugin_init() {
