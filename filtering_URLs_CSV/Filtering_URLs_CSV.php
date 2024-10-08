@@ -42,13 +42,16 @@ function csv_filter_plugin_init() {
     }
 }
 
-// Schedule the task to run every hour
-function csv_filter_plugin_schedule() {
-    if (!wp_next_scheduled('csv_filter_plugin_cron')) {
-        wp_schedule_event(time(), 'hourly', 'csv_filter_plugin_cron');
+// Hook into WordPress
+add_action('wp_head', 'csv_filter_plugin_init');
+
+// Monitor file changes
+function csv_filter_plugin_monitor_file() {
+    $newListFile = WP_CONTENT_DIR. '/filtering-URLs/Kidney_Cancer_new_list.csv';
+    $lastModified = filemtime($newListFile);
+    if ($lastModified > get_option('csv_filter_plugin_last_modified')) {
+        update_option('csv_filter_plugin_last_modified', $lastModified);
+        csv_filter_plugin_init();
     }
 }
-add_action('init', 'csv_filter_plugin_schedule');
-
-// Hook into WordPress cron
-add_action('csv_filter_plugin_cron', 'csv_filter_plugin_init');
+add_action('wp_head', 'csv_filter_plugin_monitor_file');
